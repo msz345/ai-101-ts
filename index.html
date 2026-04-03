@@ -1,19 +1,98 @@
 <!doctype html>
 <html lang="en" data-framework="typescript">
-	<head>
-		<meta charset="utf-8">
-		<title>React • TodoMVC</title>
-		<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
-		<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
-	</head>
-	<body>
-		<section class="todoapp"></section>
-		<footer class="info">
-			<p>Double-click to edit a todo</p>
-			<p>Created by <a href="http://github.com/remojansen/">Remo H. Jansen</a></p>
-			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
-		</footer>
-		<script type="text/javascript" src="node_modules/director/build/director.js"></script>
-		<script type="text/javascript" src="dist/bundle.js"></script>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>React • TodoMVC</title>
+    <link rel="stylesheet" href="node_modules/todomvc-common/base.css" />
+    <link rel="stylesheet" href="node_modules/todomvc-app-css/index.css" />
+  </head>
+  <body>
+    <section class="todoapp"></section>
+    <footer class="info">
+      <p>Double-click to edit a todo</p>
+      <p>
+        Created by <a href="http://github.com/remojansen/">Remo H. Jansen</a>
+      </p>
+      <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+      <p>Browser: <span id="browser-info">Unknown</span></p>
+      <script type="text/javascript">
+        // Wait for DOM to be fully loaded
+        document.addEventListener("DOMContentLoaded", function () {
+          try {
+            var browserInfo = "Unknown";
+
+            // Get user agent string
+            var userAgent = navigator.userAgent;
+            var browserName = "Unknown";
+            var browserVersion = "Unknown";
+
+            // Detect browser name and version
+            if (userAgent.indexOf("Chrome") > -1) {
+              browserName = "Google Chrome";
+              browserVersion = userAgent.substring(
+                userAgent.indexOf("Chrome") + 7,
+              );
+            } else if (userAgent.indexOf("Firefox") > -1) {
+              browserName = "Mozilla Firefox";
+              browserVersion = userAgent.substring(
+                userAgent.indexOf("Firefox") + 8,
+              );
+            } else if (userAgent.indexOf("Safari") > -1) {
+              browserName = "Apple Safari";
+              // Safari version is usually after "Version/"
+              var versionIndex = userAgent.indexOf("Version/");
+              if (versionIndex !== -1) {
+                browserVersion = userAgent.substring(versionIndex + 8);
+              }
+            } else if (
+              userAgent.indexOf("MSIE") > -1 ||
+              userAgent.indexOf("Trident") > -1
+            ) {
+              browserName = "Microsoft Internet Explorer";
+              // IE version is usually after "MSIE " or "rv:"
+              var ieVersion = userAgent.substring(
+                userAgent.indexOf("MSIE ") + 5,
+              );
+              if (ieVersion === "") {
+                ieVersion = userAgent.substring(userAgent.indexOf("rv:") + 3);
+              }
+              browserVersion = ieVersion;
+            } else if (
+              userAgent.indexOf("Opera") > -1 ||
+              userAgent.indexOf("OPR") > -1
+            ) {
+              browserName = "Opera";
+              if (userAgent.indexOf("OPR") > -1) {
+                browserVersion = userAgent.substring(
+                  userAgent.indexOf("OPR") + 4,
+                );
+              } else {
+                browserVersion = userAgent.substring(
+                  userAgent.indexOf("Opera") + 6,
+                );
+              }
+            }
+
+            // Clean up version string
+            if (browserVersion !== "Unknown") {
+              // Remove any trailing characters after the version number
+              browserVersion = browserVersion.split(" ")[0];
+            }
+
+            browserInfo = browserName + " " + browserVersion;
+            document.getElementById("browser-info").innerHTML = browserInfo;
+          } catch (error) {
+            console.error("Error detecting browser:", error);
+            // Fallback to default
+            document.getElementById("browser-info").innerHTML = "Unknown";
+          }
+        });
+      </script>
+    </footer>
+    <script
+      type="text/javascript"
+      src="node_modules/director/build/director.js"
+    ></script>
+    <script type="text/javascript" src="dist/bundle.js"></script>
+  </body>
 </html>
